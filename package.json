@@ -12,7 +12,15 @@
   ],
   "author": "K13",
   "license": "ISC",
-  "dependencies": {
-    "axios": "^1.7.3"
+  "homepage": "https://github.com/wk13eagle/lazy-koala",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/wk13eagle/lazy-koala.git"
+  },
+  "publishConfig": {
+    "registry": "https://registry.npmjs.org/"
+  },
+  "peerDependencies": {
+    "axios": "*"
   }
 }
