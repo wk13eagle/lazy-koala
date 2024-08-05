@@ -5,21 +5,25 @@
 LazyKoala.init(options)
 
 ```javascript
-// main.js
+// main.js/ts
 import LazyKoala from 'lazy-koala'
 LazyKoala.init()
 
 // api.js
-import { Get, Post } from 'lazy-koala'
+import { Get } from 'lazy-koala'
 
 export const getList = (
   params,config
 ) => Get('http://xxx.com/queryList', params, config)
 
-export const postList = (
-  params,config
-) => Post('http://xxx.com/queryList', params, config)
+// api.ts
+import { Post } from 'lazy-koala'
+import type { ajaxConfig } from 'lazy-koala'
 
+export const postList = (
+  params?: Record<string, unknown>,
+  config?: ajaxConfig
+) => Post('http://xxx.com/queryList', params, config)
 ```
 
 options为LazyKoala初始化配置，默认options：
