@@ -18,11 +18,11 @@ export const getList = (
 
 // api.ts
 import { Post } from 'lazy-koala'
-import type { ajaxConfig } from 'lazy-koala'
+import type { AjaxConfig } from 'lazy-koala'
 
 export const postList = (
   params?: Record<string, unknown>,
-  config?: ajaxConfig
+  config?: AjaxConfig
 ) => Post('http://xxx.com/queryList', params, config)
 ```
 

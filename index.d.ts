@@ -1,4 +1,4 @@
-export type ajaxConfig = {
+export type AjaxConfig = {
   id?: string // 请求id
   loading?: boolean // 是否启动全局loading
   failMsg?: boolean // 接口不为成功编码是否弹出失败提示
@@ -12,13 +12,13 @@ export type ajaxConfig = {
 export declare function Get(
   url?: string,
   params?: Record<string, unknown>,
-  config?: ajaxConfig
+  config?: AjaxConfig
 ): any
 
 export declare function Post(
   url?: string,
   params?: Record<string, unknown>,
-  config?: ajaxConfig
+  config?: AjaxConfig
 ): any
 
 export declare function lazyAxios(): any
@@ -46,7 +46,7 @@ interface Options {
   errToast?: () => void
 
   // 请求配置
-  requestConfig?: () => ajaxConfig
+  requestConfig?: () => AjaxConfig
 
   // 返回配置
   responseConfig?: ResponseConfig
