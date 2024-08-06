@@ -43,19 +43,19 @@ interface Options {
   loadingEnd?: () => void
 
   // 错误提示
-  errToast?: () => void
+  errToast?: (msg: string) => void
 
   // 请求配置
-  requestConfig?: () => AjaxConfig
+  requestConfig?: (config: any) => any
 
   // 返回配置
   responseConfig?: ResponseConfig
 
   // 失败统一处理
-  failFn?: () => void
+  failFn?: (res: any) => void
 
   // 错误统一处理
-  errFn?: () => void
+  errFn?: (err: any) => void
 }
 
 export declare function init(

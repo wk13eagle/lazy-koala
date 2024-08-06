@@ -5,6 +5,8 @@
 LazyKoala.init(options)
 
 ```javascript
+// 安装依赖: pnpm add axios lazy-koala
+
 // main.js/ts
 import LazyKoala from 'lazy-koala'
 LazyKoala.init()
