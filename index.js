@@ -78,7 +78,7 @@ class LazyKoala {
         if (ajaxId_) {
           if (that.loading.hasSameRequest(ajaxId_)) {
             // 存在相同请求, 防并发
-            repeatRequest.push(ajaxId_)
+            that.repeatRequest.push(ajaxId_)
             config.cancelToken = new axios.CancelToken(c => c())
           }
         }
@@ -130,7 +130,7 @@ class LazyKoala {
         error =  error || {}
         if (error.name === 'CanceledError') {
           // 并发请求
-          throw new Error(`拦截重复请求\n${JSON.stringify(repeatRequest, null, 2)}`)
+          throw new Error(`拦截重复请求\n${JSON.stringify(that.repeatRequest, null, 2)}`)
         } else {
           // 其它按AxiosError
 
