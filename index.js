@@ -72,7 +72,7 @@ class LazyKoala {
     // 请求拦截器
     this.axios.interceptors.request.use(
       config => {
-        const { config_ } = config
+        const config_  = config.config_ || {}
         const ajaxId_ = config_?.id
 
         if (ajaxId_) {
@@ -83,8 +83,8 @@ class LazyKoala {
           }
         }
 
-        config = that.options.requestConfig(config)
-        config.headers = Object.assign(config.headers, config_.headers)
+        config = that.options.requestConfig(config) || config
+        config.headers = Object.assign(config.headers, config_.headers || {})
 
         if (config_?.loading && ajaxId_) {
           that.loading.start(ajaxId_)
@@ -99,7 +99,7 @@ class LazyKoala {
     // 响应拦截器
     this.axios.interceptors.response.use(
       response => {
-        const { config_ } = response.config
+        const config_ = response.config ? response.config.config_ : {}
         if (config_?.loading && config_?.id) {
           that.loading.end(config_.id)
         }
@@ -119,7 +119,7 @@ class LazyKoala {
             that.options.errToast(res[msg])
           }
 
-          if (config_.failFn) {
+          if (config_?.failFn) {
             this.options.failFn(response)
           }
 
@@ -127,14 +127,16 @@ class LazyKoala {
         }
       },
       error => {
+        error =  error || {}
         if (error.name === 'CanceledError') {
           // 并发请求
           throw new Error(`拦截重复请求\n${JSON.stringify(repeatRequest, null, 2)}`)
         } else {
           // 其它按AxiosError
-          const { config_ } = error.config
 
-          if (config_.loading) {
+          const config_ = error.config ? error.config.config_ : {}
+
+          if (config_?.loading) {
             that.loading.end(config_.id)
           }
 
@@ -142,7 +144,7 @@ class LazyKoala {
             that.options.errToast('请稍后尝试～')
           }
 
-          if (config_.errFn) {
+          if (config_?.errFn) {
             this.options.errFn(error)
           }
 
