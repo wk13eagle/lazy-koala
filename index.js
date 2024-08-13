@@ -170,14 +170,15 @@ class LazyKoala {
 
     const urlParams = new URLSearchParams(url.split('?')[1] || '')
 
-    Object.keys(config_.query).forEach(key => {
+    Object.keys(config_.query || {}).forEach(key => {
       urlParams.append(key, config_.query[key])
     })
 
     let url_ = url.split('?')[0]
 
-    if (urlParams.length > 0) {
-      url_ = url_ + '?' + urlParams.toString()
+    const query_ = urlParams.toString()
+    if (query_) {
+      url_ = url_ + '?' + query_
     }
 
     if (type.toUpperCase() === 'GET') {
