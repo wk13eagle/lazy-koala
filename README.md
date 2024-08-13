@@ -38,6 +38,17 @@ options = {
   // 等同于axios的timeout
   timeout: 60 * 1000,
 
+  // 默认配置
+  config: {
+    loading: true, // 是否启动全局loading
+    failMsg: true, // 接口不为成功编码是否弹出失败提示
+    failFn: true, // 全局失败逻辑是否启动
+    errMsg: true, // 接口发生错误是否弹出错误提示
+    errFn: true, // 全局错误处理是否启动
+    query: {}, // url请求参数, 某些奇怪的post接口需要从query取一部分数据
+    headers: {} // 全局headers
+  },
+
   // loading启动
   loadingStart() {
     console.log('loading start')
@@ -66,11 +77,11 @@ options = {
     msgKeys: ['msg', 'message', 'desc', 'errmsg', 'respMsg'] // 状态描述key名
   },
 
-  // 失败统一处理, 返回code不为成功状态
-  failFn() {},
+  // 失败统一处理, 返回code不为成功状态 ajaxFail: res => {}
+  ajaxFail: null,
 
-  // 错误统一处理, 程序error
-  errFn() {}
+  // 错误统一处理, 程序error ajaxError: err => {}
+  ajaxError: null
 }
 ```
 

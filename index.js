@@ -52,11 +52,11 @@ class LazyKoala {
         msgKeys: ['msg', 'message', 'desc', 'errmsg', 'respMsg'] // 状态描述key名
       },
 
-      // 失败统一处理, 会覆盖默认处理, 单个请求中的failMsg失效
-      failFn: null,
+      // 失败统一处理
+      ajaxFail: null,
 
-      // 错误统一处理, 会覆盖默认处理, 单个请求中的errMsg失效
-      errFn: null
+      // 错误统一处理
+      ajaxError: null
     }, options)
 
     this.repeatRequest = [] // 重复请求
@@ -125,10 +125,12 @@ class LazyKoala {
         if (status.includes(res[code])) {
           return response.data
         } else {
-          if (config_?.failFn) {
-            this.options.failFn(response)
-          } else if (config_?.failMsg) {
+          if (config_?.failMsg) {
             that.options.errToast(res[msg])
+          }
+
+          if (config_?.failFn && this.options.ajaxFail) {
+            this.options.ajaxFail(response)
           }
 
           return Promise.reject(response.data)
@@ -147,10 +149,12 @@ class LazyKoala {
             that.loading.end(config_.id)
           }
 
-          if (config_?.errFn) {
-            this.options.errFn(error)
-          } else if (config_?.errMsg) {
+          if (config_?.errMsg) {
             that.options.errToast('请稍后尝试～')
+          }
+
+          if (config_?.errFn && this.options.ajaxError) {
+             this.options.ajaxError(error)
           }
 
           throw new Error(error)
@@ -164,13 +168,17 @@ class LazyKoala {
     const config_ = Object.assign(ajaxDefaultConfig, config)
     config_.id = config_.id || url
 
-    const urlParams = new URLSearchParams(url)
+    const urlParams = new URLSearchParams(url.split('?')[1] || '')
 
     Object.keys(config_.query).forEach(key => {
       urlParams.append(key, config_.query[key])
     })
 
-    const url_ = urlParams.toString()
+    let url_ = url.split('?')[0]
+
+    if (urlParams.length > 0) {
+      url_ = url_ + '?' + urlParams.toString()
+    }
 
     if (type.toUpperCase() === 'GET') {
       return this.axios.get(url_, {
@@ -213,7 +221,6 @@ function Post(url, params, config) {
 }
 
 // TODO: Delete/Put/下载/formdata等
-// 全局设置错误逻辑，失败逻辑
 
 function loadingStart() {
   if (!lazyKoalaInstance) {

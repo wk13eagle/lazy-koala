@@ -5,7 +5,7 @@ type GlobalAjaxConfig = {
   errMsg?: boolean // 接口发生错误是否弹出错误提示
   errFn?: boolean // 全局错误处理是否启动
   query?: Record<string, unknown> // url请求参数, 某些奇怪的post接口需要从query取一部分数据
-  headers?: Record<string, unknown> // 局部headers, 此header会补全/覆盖全局设置, 拥有最高权重
+  headers?: Record<string, unknown> // headers
 }
 
 export type AjaxConfig = GlobalAjaxConfig & {
@@ -58,10 +58,10 @@ interface Options {
   responseConfig?: ResponseConfig
 
   // 失败统一处理
-  failFn?: (res: any) => void
+  ajaxFail?: (res: any) => void
 
   // 错误统一处理
-  errFn?: (err: any) => void
+  ajaxError?: (err: any) => void
 }
 
 export declare function init(
