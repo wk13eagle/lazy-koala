@@ -1,5 +1,4 @@
-export type AjaxConfig = {
-  id?: string // 请求id
+type GlobalAjaxConfig = {
   loading?: boolean // 是否启动全局loading
   failMsg?: boolean // 接口不为成功编码是否弹出失败提示
   failFn?: boolean // 全局失败逻辑是否启动
@@ -7,6 +6,10 @@ export type AjaxConfig = {
   errFn?: boolean // 全局错误处理是否启动
   query?: Record<string, unknown> // url请求参数, 某些奇怪的post接口需要从query取一部分数据
   headers?: Record<string, unknown> // 局部headers, 此header会补全/覆盖全局设置, 拥有最高权重
+}
+
+export type AjaxConfig = GlobalAjaxConfig & {
+  id?: string // 请求id
 }
 
 export declare function Get(
@@ -35,6 +38,9 @@ interface Options {
 
   // 等同于axios的timeout
   timeout?: number
+
+  // 默认配置
+  config?: GlobalAjaxConfig
 
   // loading启动
   loadingStart?: () => void

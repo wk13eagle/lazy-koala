@@ -15,6 +15,16 @@ class LazyKoala {
       // 等同于axios的timeout
       timeout: 60 * 1000,
 
+      config: { // 默认配置
+        loading: true, // 是否启动全局loading
+        failMsg: true, // 接口不为成功编码是否弹出失败提示
+        failFn: true, // 全局失败逻辑是否启动
+        errMsg: true, // 接口发生错误是否弹出错误提示
+        errFn: true, // 全局错误处理是否启动
+        query: {}, // url请求参数, 某些奇怪的post接口需要从query取一部分数据
+        headers: {} // 全局headers
+      },
+
       // loading启动
       loadingStart() {
         console.log('loading start')
@@ -42,11 +52,11 @@ class LazyKoala {
         msgKeys: ['msg', 'message', 'desc', 'errmsg', 'respMsg'] // 状态描述key名
       },
 
-      // 失败统一处理
-      failFn() {},
+      // 失败统一处理, 会覆盖默认处理, 单个请求中的failMsg失效
+      failFn: null,
 
-      // 错误统一处理
-      errFn() {}
+      // 错误统一处理, 会覆盖默认处理, 单个请求中的errMsg失效
+      errFn: null
     }, options)
 
     this.repeatRequest = [] // 重复请求
@@ -115,12 +125,10 @@ class LazyKoala {
         if (status.includes(res[code])) {
           return response.data
         } else {
-          if (config_?.failMsg) {
-            that.options.errToast(res[msg])
-          }
-
           if (config_?.failFn) {
             this.options.failFn(response)
+          } else if (config_?.failMsg) {
+            that.options.errToast(res[msg])
           }
 
           return Promise.reject(response.data)
@@ -133,19 +141,16 @@ class LazyKoala {
           throw new Error(`拦截重复请求\n${JSON.stringify(that.repeatRequest, null, 2)}`)
         } else {
           // 其它按AxiosError
-
           const config_ = error.config ? error.config.config_ : {}
 
           if (config_?.loading) {
             that.loading.end(config_.id)
           }
 
-          if (config_?.errMsg) {
-            that.options.errToast('请稍后尝试～')
-          }
-
           if (config_?.errFn) {
             this.options.errFn(error)
+          } else if (config_?.errMsg) {
+            that.options.errToast('请稍后尝试～')
           }
 
           throw new Error(error)
@@ -155,26 +160,17 @@ class LazyKoala {
   }
 
   request(url, params, config, type) {
-    const ajaxDefaultConfig = {
-      id: null, // 请求id
-      loading: true, // 是否启动全局loading
-      failMsg: true, // 接口不为成功编码是否弹出失败提示
-      failFn: true, // 全局失败逻辑是否启动
-      errMsg: true, // 接口发生错误是否弹出错误提示
-      errFn: true, // 全局错误处理是否启动
-      query: {}, // url请求参数, 某些奇怪的post接口需要从query取一部分数据
-      headers: {} // 局部headers, 此header会补全/覆盖全局设置, 拥有最高权重
-    }
-
+    const ajaxDefaultConfig = JSON.parse(JSON.stringify(this.options.config))
     const config_ = Object.assign(ajaxDefaultConfig, config)
     config_.id = config_.id || url
-    const query_ = []
 
-    for (const key in config_.query) {
-      query_.push(`${key}=${config_.query[key]}`)
-    }
+    const urlParams = new URLSearchParams(url)
 
-    const url_ = url + (query_.length > 0 ? `?${query_.join('&')}` : '')
+    Object.keys(config_.query).forEach(key => {
+      urlParams.append(key, config_.query[key])
+    })
+
+    const url_ = urlParams.toString()
 
     if (type.toUpperCase() === 'GET') {
       return this.axios.get(url_, {
@@ -217,6 +213,7 @@ function Post(url, params, config) {
 }
 
 // TODO: Delete/Put/下载/formdata等
+// 全局设置错误逻辑，失败逻辑
 
 function loadingStart() {
   if (!lazyKoalaInstance) {
