@@ -1,3 +1,5 @@
+import type { AxiosResponse } from 'axios'
+
 type GlobalAjaxConfig = {
   loading?: boolean // 是否启动全局loading
   failMsg?: boolean // 接口不为成功编码是否弹出失败提示
@@ -16,15 +18,15 @@ export declare function Get(
   url?: string,
   params?: Record<string, unknown>,
   config?: AjaxConfig
-): any
+): Promise<AxiosResponse>
 
 export declare function Post(
   url?: string,
   params?: Record<string, unknown>,
   config?: AjaxConfig
-): any
+): Promise<AxiosResponse>
 
-export declare function lazyAxios(): any
+export declare function lazyAxios(): Promise<AxiosResponse>
 
 interface ResponseConfig {
   status?: Array<number | string> // 成功状态，可以是数字或字符串
