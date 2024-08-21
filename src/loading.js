@@ -1,8 +1,8 @@
 export class Loading {
   constructor(options) {
     this.options = options || {
-      loadingStart() {},
-      loadingEnd() {}
+      loadingStart() { console.log('loading start') },
+      loadingEnd() { console.log('loading end') }
     }
   }
 
@@ -13,15 +13,17 @@ export class Loading {
       this.options.loadingStart()
     }
 
-    if (!this.#ajaxIds.includes(ajaxId)) {
+    if (ajaxId && !this.#ajaxIds.includes(ajaxId)) {
       this.#ajaxIds.push(ajaxId)
     }
   }
 
   end(ajaxId) {
-    const idIndex = this.#ajaxIds.indexOf(ajaxId)
-    if (idIndex > -1) {
-      this.#ajaxIds.splice(idIndex, 1)
+    if (ajaxId) {
+      const idIndex = this.#ajaxIds.indexOf(ajaxId)
+      if (idIndex > -1) {
+        this.#ajaxIds.splice(idIndex, 1)
+      }
     }
 
     if (this.#ajaxIds.length < 1) {
@@ -30,6 +32,9 @@ export class Loading {
   }
 
   hasSameRequest(ajaxId) {
-    return this.#ajaxIds.includes(ajaxId)
+    if (ajaxId) {
+      return this.#ajaxIds.includes(ajaxId)
+    }
+    return false
   }
 }

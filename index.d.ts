@@ -1,4 +1,4 @@
-import type { AxiosResponse } from 'axios'
+import type { AxiosResponse, AxiosInstance } from 'axios'
 
 type GlobalAjaxConfig = {
   loading?: boolean // 是否启动全局loading
@@ -26,7 +26,7 @@ export declare function Post(
   config?: AjaxConfig
 ): Promise<AxiosResponse>
 
-export declare function lazyAxios(): Promise<AxiosResponse>
+export declare function lazyAxios(): AxiosInstance
 
 interface ResponseConfig {
   status?: Array<number | string> // 成功状态，可以是数字或字符串
@@ -68,4 +68,4 @@ interface Options {
 
 export declare function init(
   options?: Options
-): any
+): void

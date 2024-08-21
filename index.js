@@ -1,6 +1,10 @@
+import 'vant/es/toast/style' // Toast
+import { showToast, showLoadingToast } from 'vant'
+
 import axios from 'axios'
 import { Loading } from './src/loading'
 
+let loadingId = null
 let lazyKoalaInstance = null
 
 class LazyKoala {
@@ -27,17 +31,21 @@ class LazyKoala {
 
       // loading启动
       loadingStart() {
-        console.log('loading start')
+        loadingId = showLoadingToast({
+          duration: 0,
+          message: '加载中...',
+          forbidClick: true
+        })
       },
 
       // loading结束
       loadingEnd() {
-        console.log('loading end')
+        loadingId && loadingId.close()
       },
 
       // 错误提示
       errToast(msg) {
-        alert(msg)
+        showToast(msg)
       },
 
       // 请求配置
@@ -110,11 +118,43 @@ class LazyKoala {
     this.axios.interceptors.response.use(
       response => {
         const config_ = response.config ? response.config.config_ : {}
+
+        // 结束loading
         if (config_?.loading && config_?.id) {
           that.loading.end(config_.id)
         }
 
+
+        /* 流文件类型 */
+        const contentDisposition = response.headers['content-disposition']
+        // 接口指定附件形式
+        if (contentDisposition && contentDisposition.startsWith('attachment')) {
+          return response
+        }
+
+        // 接口未指定 通过content-type 判断
+        const contentType = response.headers['content-type']
+        if (contentType && (
+          contentType.startsWith('application/pdf') ||
+          contentType.startsWith('application/zip') ||
+          contentType.startsWith('application/x-tar') ||
+          contentType.startsWith('application/gzip') ||
+          contentType.startsWith('application/vnd.ms-excel') ||
+          contentType.startsWith('application/csv') ||
+          contentType.startsWith('application/octet-stream')
+        )) {
+          return response
+        }
+
+        // 非流文件类型
         const { data: res } = response
+
+        // 非json格式
+        if (!contentType.startsWith('application/json')) {
+          return res
+        }
+
+        // JSON格式
         const status = this.options.responseConfig.status
         const codeKeys = this.options.responseConfig.codeKeys
         const msgKeys = this.options.responseConfig.msgKeys
@@ -123,7 +163,7 @@ class LazyKoala {
         const [msg] = msgKeys.filter(item => res[item] !== undefined)
 
         if (status.includes(res[code])) {
-          return response.data
+          return res
         } else {
           if (config_?.failMsg) {
             that.options.errToast(res[msg])
@@ -133,14 +173,16 @@ class LazyKoala {
             this.options.ajaxFail(response)
           }
 
-          return Promise.reject(response.data)
+          return Promise.reject(res)
         }
       },
       error => {
         error =  error || {}
         if (error.name === 'CanceledError') {
           // 并发请求
-          throw new Error(`拦截重复请求\n${JSON.stringify(that.repeatRequest, null, 2)}`)
+          const repeatRequest = JSON.stringify(that.repeatRequest, null, 2)
+          that.repeatRequest = [] // 重置统计
+          throw new Error(`拦截重复请求\n${ repeatRequest }`)
         } else {
           // 其它按AxiosError
           const config_ = error.config ? error.config.config_ : {}
@@ -154,7 +196,7 @@ class LazyKoala {
           }
 
           if (config_?.errFn && this.options.ajaxError) {
-             this.options.ajaxError(error)
+            this.options.ajaxError(error)
           }
 
           throw new Error(error)
@@ -194,14 +236,6 @@ class LazyKoala {
       })
     }
   }
-
-  get(url, params, config) {
-    return this.request(url, params, config, 'GET')
-  }
-
-  post(url, params, config) {
-    return this.request(url, params, config, 'POST')
-  }
 }
 
 /**
@@ -211,30 +245,16 @@ function Get(url, params, config) {
   if (!lazyKoalaInstance) {
     throw new Error('LazyKoala has not been initialized')
   }
-  return lazyKoalaInstance.get(url, params, config)
+
+  return lazyKoalaInstance.request(url, params, config, 'GET')
 }
 
 function Post(url, params, config) {
   if (!lazyKoalaInstance) {
     throw new Error('LazyKoala has not been initialized')
   }
-  return lazyKoalaInstance.post(url, params, config)
-}
 
-// TODO: Delete/Put/下载/formdata等
-
-function loadingStart() {
-  if (!lazyKoalaInstance) {
-    throw new Error('LazyKoala has not been initialized')
-  }
-  return lazyKoalaInstance.options.loadingStart
-}
-
-function loadingEnd() {
-  if (!lazyKoalaInstance) {
-    throw new Error('LazyKoala has not been initialized')
-  }
-  return lazyKoalaInstance.options.loadingEnd
+  return lazyKoalaInstance.request(url, params, config, 'POST')
 }
 
 function lazyAxios() {
@@ -244,7 +264,7 @@ function lazyAxios() {
   return lazyKoalaInstance.axios
 }
 
-export { Get, Post, loadingStart, loadingEnd, lazyAxios }
+export { Get, Post, lazyAxios }
 
 export default {
   init: function(options) {
