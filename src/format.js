@@ -23,7 +23,7 @@ export function formatTime(date, format = 'YYYY-MM-DD HH:mm:ss') {
   return tempFormat
 }
 
-// 格式化金额  111,11.00
+// 格式化金额  11,111.00
 export function formatPrice(amount) {
   const amount_ = Number(amount)
   if (isNaN(amount_)) return amount
