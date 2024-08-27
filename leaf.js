@@ -7,7 +7,7 @@ import { inMobile, inWX, inZFB, inCMCC } from './src/env'
 import { formatTime, formatPrice } from './src/format'
 import { random } from './src/random'
 import { saveFile } from './src/saveFile'
-import { urlParams } from './src/urlParams'
+import { searchParams, hashParams, urlParams } from './src/urlParams'
 import { izMobile, izSMS } from './src/verify'
 
 export {
@@ -19,6 +19,6 @@ export {
   formatTime, formatPrice,
   random,
   saveFile,
-  urlParams,
+  searchParams, hashParams, urlParams,
   izMobile, izSMS
 }

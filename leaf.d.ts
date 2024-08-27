@@ -166,14 +166,28 @@ export declare function saveFile(
 
 
 /**
+ * Lazy serachParams 获取url参数
+ * @param key - 可选, 键名
+ * @returns 如果传入 key, 返回对应的 string 值；如果未传入 key，返回包含所有 search 参数的对象
+ */
+export declare function searchParams(key?: string): string | Record<string, string>
+
+/**
+ * Lazy hashParams 获取url参数
+ * @param key - 可选, 键名
+ * @returns 如果传入 key, 返回对应的 string 值；如果未传入 key，返回包含所有 hash 参数的对象
+ */
+export declare function hashParams(key?: string): string | Record<string, string>
+
+/**
  * Lazy urlParams 获取url参数
  * @param key - 可选, 键名
- * @returns string值或Object对象
- * @remarks 如果传入key, 返回string, 如果未传入key返回 {}
+ * @returns 如果传入 key, 返回 search 或 hash 中对应的 string 值，如果未传入 key 返回一个包含 search 和 hash 参数的对象
+ * @remarks 如果传入 key, 优先返回 search 中对应的值，如果 search 中不存在，则返回 hash 中对应的值
  */
 export declare function urlParams(
-  key?: string,
-): string | Object
+  key?: string
+): string | { search: Record<string, string>, hash: Record<string, string> }
 
 
 /**

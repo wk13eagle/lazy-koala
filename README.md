@@ -124,7 +124,7 @@ import {
   inMobile, inWX, inZFB, inCMCC,
   formatTime, formatPrice,
   saveFile,
-  urlParams,
+  searchParams, hashParams, urlParams,
   izMobile, izSMS
 } from 'lazy-koala/leaf'
 ```
@@ -212,14 +212,36 @@ formatPrice(amount)
 saveFile(fileData, fileName)
 ```
 
-* ##### urlParams （URL参数）
+* ##### searchParams （URL中search的参数）
+```javascript
+/**
+ * 获取url中search的参数
+ * key(可选): 参数名 - string
+ * 如果填key返回单个, 类型为string, 不填返回全部, 类型为object
+ */
+searchParams() // {}
+searchParams(key) // string
+```
+
+* ##### hashParams （URL中hash的参数）
+```javascript
+/**
+ * 获取url中hash的参数
+ * key(可选): 参数名 - string
+ * 如果填key返回单个, 类型为string, 不填返回全部, 类型为object
+ */
+hashParams() // {}
+hashParams(key) // string
+```
+
+* ##### urlParams （URL参数, 包括search和hash）
 ```javascript
 /**
  * 获取url参数
  * key(可选): 参数名 - string
- * 如果填key返回单个, 类型为string, 不填返回全部, 类型为object
+ * 如果填key返回单个, 类型为string, 优先search中的, 不填返回全部, 类型为object
  */
-urlParams() // {}
+urlParams() // { search: {}, hash: {}}
 urlParams(key) // string
 ```
 
