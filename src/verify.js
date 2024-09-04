@@ -1,3 +1,8 @@
+/**
+ * Lazy Verify
+ * 验证工具集合
+ */
+
 // 验证手机号
 export function izMobile(mobile) {
   return /^1\d{10}$/.test(mobile)

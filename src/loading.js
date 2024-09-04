@@ -1,3 +1,7 @@
+/**
+ * Lazy Loading
+ * 抽象Loading逻辑, 不具体实现loading
+ */
 export class Loading {
   constructor(options) {
     this.options = options || {

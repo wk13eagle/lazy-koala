@@ -35,20 +35,20 @@ export declare function UUID(): string
 
 
 /**
- * Lazy clipboard 复制到剪贴板
+ * Lazy Clipboard 复制到剪贴板
  * @param text - 文本内容
  * @returns Promise
  */
-export declare function clipboard(
+export declare function Clipboard(
   text: string
-): Promise<void>
+): Promise<string>
 
 
 /**
- * Lazy cookie
+ * Lazy Cookie
  * 为方便使用, 默认永久有效，如需会话关闭失效, 设置1000或更小数字
  */
-export declare const cookie: {
+export declare const Cookie: {
   /**
    * 设置 cookie
    * @param name - cookie 的名称
@@ -109,30 +109,30 @@ export declare function inCMCC(): boolean
 
 
 /**
- * Lazy formatTime 格式化时间
+ * Lazy FormatTime 格式化时间
  * @param date - 待格式化Date
  * @param format - 可选, 默认 'YYYY-MM-DD HH:mm:ss'
  * @returns 2024-08-20 12:00:00
  */
-export declare function formatTime(
+export declare function FormatTime(
   date: Date,
   format?: string
 ): string
 
 /**
- * Lazy formatPrice 格式化金额
+ * Lazy FormatPrice 格式化金额
  * @param amount - 待格式化金额
  * @returns 10,000.00
  */
-export declare function formatPrice(
+export declare function FormatPrice(
   amount: number | string,
 ): string
 
 
 /**
- * Lazy random 随机数
+ * Lazy Random 随机数
  */
-export declare const random: {
+export declare const Random: {
   /**
    * 生成指定区间的随机整数
    * @param min - 随机数的最小值（包含）
@@ -155,37 +155,37 @@ export declare const random: {
 
 
 /**
- * Lazy saveFile 保存文件
+ * Lazy SaveFile 保存文件
  * @param fileData - 文件流
  * @param fileName - 文件名称
  */
-export declare function saveFile(
+export declare function SaveFile(
   fileData: ArrayBuffer | Blob,
   fileName: string
 ): void
 
 
 /**
- * Lazy serachParams 获取url参数
+ * Lazy SerachParams 获取url参数
  * @param key - 可选, 键名
  * @returns 如果传入 key, 返回对应的 string 值；如果未传入 key，返回包含所有 search 参数的对象
  */
-export declare function searchParams(key?: string): string | Record<string, string>
+export declare function SearchParams(key?: string): string | Record<string, string>
 
 /**
- * Lazy hashParams 获取url参数
+ * Lazy HashParams 获取url参数
  * @param key - 可选, 键名
  * @returns 如果传入 key, 返回对应的 string 值；如果未传入 key，返回包含所有 hash 参数的对象
  */
-export declare function hashParams(key?: string): string | Record<string, string>
+export declare function HashParams(key?: string): string | Record<string, string>
 
 /**
- * Lazy urlParams 获取url参数
+ * Lazy UrlParams 获取url参数
  * @param key - 可选, 键名
  * @returns 如果传入 key, 返回 search 或 hash 中对应的 string 值，如果未传入 key 返回一个包含 search 和 hash 参数的对象
  * @remarks 如果传入 key, 优先返回 search 中对应的值，如果 search 中不存在，则返回 hash 中对应的值
  */
-export declare function urlParams(
+export declare function UrlParams(
   key?: string
 ): string | { search: Record<string, string>, hash: Record<string, string> }
 
@@ -211,7 +211,7 @@ export declare function izSMS(
 ): boolean
 
 
-declare function countdown(options: {
+interface CountDownOptions {
   /**
    * timer - 计时器, 单位秒, 默认 59
    */
@@ -221,4 +221,13 @@ declare function countdown(options: {
    * onTick - 倒计时回调
    */
   onTick?: (remainingTime: number) => void
-}): Promise<string>
+}
+
+/**
+ * Lazy CountDown 倒计时
+ * @param options - 可选参数
+ * @returns Promise
+ */
+declare function CountDown(
+  options: CountDownOptions
+): Promise<string>

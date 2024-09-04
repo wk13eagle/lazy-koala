@@ -1,5 +1,8 @@
-// 保存文件
-export function saveFile(fileData, fileName) {
+/**
+ * Lazy SaveFile
+ * 保存文件
+ */
+export function SaveFile(fileData, fileName) {
   const blob = new Blob([fileData])
   const elink = document.createElement('a')
   elink.download = decodeURIComponent(fileName)

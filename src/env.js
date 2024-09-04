@@ -1,3 +1,6 @@
+/**
+ * 判断所在环境
+ */
 const ua = navigator.userAgent.toLowerCase()
 
 // 手机环境

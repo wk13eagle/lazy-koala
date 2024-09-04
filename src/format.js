@@ -1,5 +1,9 @@
-// 格式化时间 YYYY-MM-DD HH:mm:ss
-export function formatTime(date, format = 'YYYY-MM-DD HH:mm:ss') {
+/**
+ * Lazy FormatTime
+ * 格式化时间
+ * 支持: YYYY-MM-DD HH:mm:ss
+ */
+export function FormatTime(date, format = 'YYYY-MM-DD HH:mm:ss') {
   if (!(date instanceof Date)) {
     throw new TypeError('date must be a Date object')
   }
@@ -23,8 +27,12 @@ export function formatTime(date, format = 'YYYY-MM-DD HH:mm:ss') {
   return tempFormat
 }
 
-// 格式化金额  11,111.00
-export function formatPrice(amount) {
+/**
+ * Lazy FormatPrice
+ * 格式化金额
+ * 例: 11,111.00
+ */
+export function FormatPrice(amount) {
   const amount_ = Number(amount)
   if (isNaN(amount_)) return amount
   return amount_.toFixed(2).replace(/\d{1,3}(?=(\d{3})+(\.\d+)?$)/g, '$&,')

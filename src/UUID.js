@@ -1,4 +1,7 @@
-// 生成uuid v4
+/**
+ * Lazy UUID
+ * 生成uuid v4
+ */
 export const UUID = () => {
   return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, c => {
     const r = (Math.random() * 16) | 0

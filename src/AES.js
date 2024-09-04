@@ -1,3 +1,7 @@
+/**
+ * Lazy AES
+ * 支持 base64/hex
+ */
 import CryptoAES from 'crypto-js/aes'
 import Utf8 from 'crypto-js/enc-utf8'
 import ECB from 'crypto-js/mode-ecb'

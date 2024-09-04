@@ -1,4 +1,8 @@
-export function clipboard(text) {
+/**
+ * Lazy Clipboard
+ * 复制文字内容到剪贴板
+ */
+export function Clipboard(text) {
   return new Promise((resolve, reject) => {
     if (navigator.clipboard) {
       // 使用 Clipboard API

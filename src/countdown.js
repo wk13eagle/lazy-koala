@@ -1,5 +1,8 @@
-// 倒计时
-export const countdown = ({timer = 59, onTick = () => {}}) => {
+/**
+ * Lazy CountDown
+ * 倒计时
+ */
+export const CountDown = ({timer = 59, onTick = () => {}}) => {
   let timer_ = timer
 
   return new Promise((resolve, reject) => {

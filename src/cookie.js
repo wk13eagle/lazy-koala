@@ -1,4 +1,8 @@
-export const cookie = {
+/**
+ * Lazy Cookie
+ * 支持 增/删/改/查
+ */
+export const Cookie = {
   // 设置cookie, 支持过期时间(以毫秒为单位), 默认永久有效
   setItem(name, value, milliseconds) {
     let expires = ''

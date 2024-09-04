@@ -122,11 +122,11 @@ import {
   AES, DAES,
   UUID,
   inMobile, inWX, inZFB, inCMCC,
-  formatTime, formatPrice,
-  saveFile,
-  searchParams, hashParams, urlParams,
+  FormatTime, FormatPrice,
+  SaveFile,
+  SearchParams, HashParams, UrlParams,
   izMobile, izSMS,
-  countdown
+  CountDown
 } from 'lazy-koala/leaf'
 ```
 
@@ -185,7 +185,7 @@ const inZFB_ = inZFB()
 const inCMCC_ = inCMCC()
 ```
 
-* ##### formatTime / formatPrice （格式化数据）
+* ##### FormatTime / FormatPrice （格式化数据）
 ```javascript
 /**
  * 格式化时间
@@ -193,57 +193,57 @@ const inCMCC_ = inCMCC()
  * format(可选): 格式化格式 - string, 默认: 'YYYY-MM-DD HH:mm:ss'
  * 返回 2023-08-19 12:00:00
  */
-formatTime(date, format)
+FormatTime(date, format)
 
 /**
  * 格式化金额
  * amount(必填): 金额 - string | number
  * 返回 10,000.00
  */
-formatPrice(amount)
+FormatPrice(amount)
 ```
 
-* ##### saveFile （保存文件）
+* ##### SaveFile （保存文件）
 ```javascript
 /**
  * 格式化金额
  * fileData(必填): 文件数据 - ArrayBuffer | Blob
  * fileName(必填): 文件名称 - string
  */
-saveFile(fileData, fileName)
+SaveFile(fileData, fileName)
 ```
 
-* ##### searchParams （URL中search的参数）
+* ##### SearchParams （URL中search的参数）
 ```javascript
 /**
  * 获取url中search的参数
  * key(可选): 参数名 - string
  * 如果填key返回单个, 类型为string, 不填返回全部, 类型为object
  */
-searchParams() // {}
-searchParams(key) // string
+SearchParams() // {}
+SearchParams(key) // string
 ```
 
-* ##### hashParams （URL中hash的参数）
+* ##### HashParams （URL中hash的参数）
 ```javascript
 /**
  * 获取url中hash的参数
  * key(可选): 参数名 - string
  * 如果填key返回单个, 类型为string, 不填返回全部, 类型为object
  */
-hashParams() // {}
-hashParams(key) // string
+HashParams() // {}
+HashParams(key) // string
 ```
 
-* ##### urlParams （URL参数, 包括search和hash）
+* ##### UrlParams （URL参数, 包括search和hash）
 ```javascript
 /**
  * 获取url参数
  * key(可选): 参数名 - string
  * 如果填key返回单个, 类型为string, 优先search中的, 不填返回全部, 类型为object
  */
-urlParams() // { search: {}, hash: {}}
-urlParams(key) // string
+UrlParams() // { search: {}, hash: {}}
+UrlParams(key) // string
 ```
 
 * ##### izMobile / izSMS （校验）
@@ -264,15 +264,8 @@ izMobile(mobile)
 izSMS(sms, len)
 ```
 
-* ##### countdown（倒计时）
+* ##### CountDown（倒计时）
 ```javascript
-/**
- * 校验手机号
- * mobile(必填): 手机号 - string
- * 返回 true/false
- */
-izMobile(mobile)
-
 /**
  * 倒计时
  * options - object
@@ -280,7 +273,7 @@ izMobile(mobile)
  * options.onTick(可选): 倒计时回调 - function
  * 返回 Promise
  */
-countdown({
+CountDown({
   timer: 59,
   onTick: remainingTime => {}
 })
