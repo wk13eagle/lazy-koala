@@ -126,7 +126,8 @@ import {
   SaveFile,
   SearchParams, HashParams, UrlParams,
   izMobile, izSMS,
-  CountDown
+  CountDown,
+  showToast, showLoadingToast // 使用vant组件
 } from 'lazy-koala/leaf'
 ```
 
@@ -277,4 +278,15 @@ CountDown({
   timer: 59,
   onTick: remainingTime => {}
 })
+```
+
+* ##### Toast（提示）
+```javascript
+Toast('hello') // 提示
+
+// loading
+const loadintId = showLoadingToast()
+setTimeout(() => {
+  loadintId.close()
+}, 2000)
 ```

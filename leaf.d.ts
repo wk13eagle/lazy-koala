@@ -231,3 +231,18 @@ interface CountDownOptions {
 declare function CountDown(
   options: CountDownOptions
 ): Promise<string>
+
+
+/**
+ * Lazy Toast
+ * @param msg - 提示文字
+ */
+declare function showToast(
+  msg: string
+): void
+
+
+/**
+ * Lazy Loading
+ */
+declare function showLoadingToast(): { close(): void }

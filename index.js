@@ -1,11 +1,6 @@
-import 'vant/es/toast/style' // Toast
-import { showToast, showLoadingToast, allowMultipleToast } from 'vant'
-
 import axios from 'axios'
 import { Loading } from './src/loading'
-
-// 允许多个Toast存在
-allowMultipleToast()
+import { showToast, showLoadingToast } from './src/Toast'
 
 let loadingId = null
 let lazyKoalaInstance = null
@@ -34,11 +29,7 @@ class LazyKoala {
 
       // loading启动
       loadingStart() {
-        loadingId = showLoadingToast({
-          duration: 0,
-          message: '加载中...',
-          forbidClick: true
-        })
+        loadingId = showLoadingToast()
       },
 
       // loading结束

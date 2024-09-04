@@ -10,6 +10,7 @@ import { SaveFile } from './src/SaveFile'
 import { SearchParams, HashParams, UrlParams } from './src/UrlParams'
 import { izMobile, izSMS } from './src/Verify'
 import { CountDown } from './src/CountDown'
+import { showToast, showLoadingToast } from './src/Toast'
 
 export {
   AES, DAES,
@@ -22,5 +23,6 @@ export {
   SaveFile,
   SearchParams, HashParams, UrlParams,
   izMobile, izSMS,
-  CountDown
+  CountDown,
+  showToast, showLoadingToast
 }
