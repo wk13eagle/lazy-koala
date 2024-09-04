@@ -209,3 +209,16 @@ export declare function izSMS(
   sms: string,
   len?: number
 ): boolean
+
+
+declare function countdown(options: {
+  /**
+   * timer - 计时器, 单位秒, 默认 59
+   */
+  timer?: number
+
+  /**
+   * onTick - 倒计时回调
+   */
+  onTick?: (remainingTime: number) => void
+}): Promise<string>

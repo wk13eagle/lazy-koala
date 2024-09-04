@@ -109,7 +109,7 @@ interface ResponseConfig {
   msgKeys?: Array<string>
 }
 
-interface Options {
+interface InitOptions {
   /**
    * baseURL - 等同于axios的baseURL
    */
@@ -176,5 +176,5 @@ interface Options {
  * @param ajaxError - 请求配置
  */
 export declare function init(
-  options?: Options
+  options?: InitOptions
 ): void

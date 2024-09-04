@@ -9,6 +9,7 @@ import { random } from './src/random'
 import { saveFile } from './src/saveFile'
 import { searchParams, hashParams, urlParams } from './src/urlParams'
 import { izMobile, izSMS } from './src/verify'
+import { countdown } from './src/countdown'
 
 export {
   AES, DAES,
@@ -20,5 +21,6 @@ export {
   random,
   saveFile,
   searchParams, hashParams, urlParams,
-  izMobile, izSMS
+  izMobile, izSMS,
+  countdown
 }

@@ -125,7 +125,8 @@ import {
   formatTime, formatPrice,
   saveFile,
   searchParams, hashParams, urlParams,
-  izMobile, izSMS
+  izMobile, izSMS,
+  countdown
 } from 'lazy-koala/leaf'
 ```
 
@@ -261,4 +262,26 @@ izMobile(mobile)
  * 返回 true/false
  */
 izSMS(sms, len)
+```
+
+* ##### countdown（倒计时）
+```javascript
+/**
+ * 校验手机号
+ * mobile(必填): 手机号 - string
+ * 返回 true/false
+ */
+izMobile(mobile)
+
+/**
+ * 倒计时
+ * options - object
+ * options.timer(可选): 计时器 - number
+ * options.onTick(可选): 倒计时回调 - function
+ * 返回 Promise
+ */
+countdown({
+  timer: 59,
+  onTick: remainingTime => {}
+})
 ```
