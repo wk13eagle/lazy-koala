@@ -1,5 +1,4 @@
 import axios from 'axios'
-import qs from 'qs'
 import { Loading } from './src/loading'
 import { showToast, showLoadingToast } from './src/Toast'
 
@@ -103,9 +102,6 @@ class LazyKoala {
           that.loading.start(ajaxId_)
         }
 
-        if (config.method === 'get' && config.params) {
-          config.paramsSerializer = params => qs.stringify(params, { indices: false })
-        }
         return config
       },
       error => {
@@ -215,6 +211,12 @@ class LazyKoala {
       urlParams.append(key, config_.query[key])
     })
 
+    if (type.toUpperCase() === 'GET') {
+      Object.keys(params || {}).forEach(key => {
+        urlParams.append(key, params[key])
+      })
+    }
+
     let url_ = url.split('?')[0]
 
     const query_ = urlParams.toString()
@@ -224,7 +226,6 @@ class LazyKoala {
 
     if (type.toUpperCase() === 'GET') {
       return this.axios.get(url_, {
-        params,
         config_
       })
     }
