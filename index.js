@@ -85,10 +85,6 @@ class LazyKoala {
     // 请求拦截器
     this.axios.interceptors.request.use(
       config => {
-        if (config.method === 'get' && config.params) {
-          config.paramsSerializer = params => qs.stringify(params, { indices: false })
-        }
-
         const config_  = config.config_ || {}
         const ajaxId_ = config_?.id
 
@@ -105,6 +101,10 @@ class LazyKoala {
 
         if (config_?.loading && ajaxId_) {
           that.loading.start(ajaxId_)
+        }
+
+        if (config.method === 'get' && config.params) {
+          config.paramsSerializer = params => qs.stringify(params, { indices: false })
         }
         return config
       },
