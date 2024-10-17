@@ -21,8 +21,8 @@ options = {
     failFn: true,  // 全局失败逻辑是否启动
     errMsg: true,  // 接口发生错误是否弹出错误提示
     errFn: true,   // 全局错误处理是否启动
-    query: {},     // url请求参数, 某些奇怪的post接口需要从query取一部分数据
-    headers: {}    // 全局headers
+    query: {},     // url请求参数, 某些奇怪的post接口需要从query取一部分数据, 优先级: 全局query < 局部query
+    headers: {}    // 全局headers 优先级: 全局headers < requestConfig中设置的headers < 局部headers
   },
 
   // loading启动
@@ -76,24 +76,90 @@ LazyKoala.init()
 * 使用javascript
 ```javascript
 // api.js
-import { Get } from 'lazy-koala'
+import { Get, Post, downloadRequest, uploadRequest } from 'lazy-koala'
 
+// get
 export const getList = (
-  params,config
+  params, config
 ) => Get('http://xxx.com/queryList', params, config)
 
+// post
+export const getList = (
+  params, config
+) => Post('http://xxx.com/queryList', params, config)
+
+// upload
+export const addFile = (
+  params, config
+) => uploadRequest('http://xxx.com/addFile', params, config)
+
+// <input type="file" @change="upload" />
+function upload(e) {
+  const formData = new FormData()
+  formData.append('file', e.target.files[0])
+
+  addFile(formData).then(res => {
+    console.log(res)
+  })
+}
+
+// download
+export const listExport = (
+  params, config
+) => downloadRequest('http://xxx.com/excelList', params, config)
+
+listExport().then(res => {
+  const fileData = res.data
+  const fileName = res.headers['content-disposition'].split('filename=')[1]
+  // SaveFile(fileData, fileName) // 保存文件
+})
 ```
 
 * 使用typescript
 ```javascript
 // api.ts
-import { Post } from 'lazy-koala'
+import { Get, Post, downloadRequest, uploadRequest } from 'lazy-koala'
 import type { AjaxConfig } from 'lazy-koala'
 
-export const postList = (
+// get
+export const getList = (
+  params?: Record<string, unknown>,
+  config?: AjaxConfig
+) => Get('http://xxx.com/queryList', params, config)
+
+// post
+export const getList = (
   params?: Record<string, unknown>,
   config?: AjaxConfig
 ) => Post('http://xxx.com/queryList', params, config)
+
+// upload
+export const addFile = (
+  params: FormData,
+  config?: AjaxConfig
+) => uploadRequest('http://xxx.com/addFile', params, config)
+
+// <input type="file" @change="upload" />
+function upload(e: any) {
+  const formData = new FormData()
+  formData.append('file', e.target.files[0])
+
+  addFile(formData).then(res => {
+    console.log(res)
+  })
+}
+
+// download
+export const listExport = (
+  params?: Record<string, unknown>,
+  config?: AjaxConfig
+) => downloadRequest('http://xxx.com/excelList', params, config)
+
+listExport().then(res => {
+  const fileData = res.data
+  const fileName = res.headers['content-disposition'].split('filename=')[1]
+  // SaveFile(fileData, fileName) // 保存文件
+})
 ```
 
 
@@ -108,9 +174,11 @@ config = {
   failFn: true,  // 全局失败逻辑是否启动
   errMsg: true,  // 接口发生错误是否弹出错误提示
   errFn: true,   // 全局错误处理是否启动
-  query: {},     // url请求参数, 某些奇怪的post接口需要从query取一部分数据
+  query: {},     // url请求参数, 某些奇怪的post接口需要从query取一部分数据, 此query会补全/覆盖全局设置, 拥有最高权重
   headers: {}    // 局部headers, 此header会补全/覆盖全局设置, 拥有最高权重
 }
+
+downloadRequest 和 uploadRequest 支持第四个参数，值为'GET' 或 'POST'， 默认'POST'
 ```
 
 ### 3. Leaf 工具包

@@ -10,7 +10,8 @@ class LazyKoala {
     if (lazyKoalaInstance) {
       return lazyKoalaInstance
     }
-    this.options = Object.assign({
+
+    const defaultOptions = {
       // 等同于axios的baseURL
       baseURL: '',
 
@@ -59,7 +60,11 @@ class LazyKoala {
 
       // 错误统一处理
       ajaxError: null
-    }, options)
+    }
+
+    this.options = Object.assign({}, defaultOptions, options)
+    this.options.config = Object.assign({}, defaultOptions.config, options.config || {})
+    this.options.responseConfig = Object.assign({}, defaultOptions.responseConfig, options.responseConfig || {})
 
     this.repeatRequest = [] // 重复请求
 
@@ -82,7 +87,7 @@ class LazyKoala {
     const that = this
 
     // 请求拦截器
-    this.axios.interceptors.request.use(
+    that.axios.interceptors.request.use(
       config => {
         const config_  = config.config_ || {}
         const ajaxId_ = config_?.id
@@ -96,7 +101,7 @@ class LazyKoala {
         }
 
         config = that.options.requestConfig(config) || config
-        config.headers = Object.assign(config.headers, config_.headers || {})
+        config.headers = Object.assign({}, that.options.config.headers, config.headers, config_.headers || {})
 
         if (config_?.loading && ajaxId_) {
           that.loading.start(ajaxId_)
@@ -110,7 +115,7 @@ class LazyKoala {
     )
 
     // 响应拦截器
-    this.axios.interceptors.response.use(
+    that.axios.interceptors.response.use(
       response => {
         const config_ = response.config ? response.config.config_ : {}
 
@@ -119,9 +124,9 @@ class LazyKoala {
           that.loading.end(config_.id)
         }
 
-
         /* 流文件类型 */
         const contentDisposition = response.headers['content-disposition']
+
         // 接口指定附件形式
         if (contentDisposition && contentDisposition.startsWith('attachment')) {
           return response
@@ -129,6 +134,7 @@ class LazyKoala {
 
         // 接口未指定 通过content-type 判断
         const contentType = response.headers['content-type']
+
         if (contentType && (
           contentType.startsWith('application/pdf') ||
           contentType.startsWith('application/zip') ||
@@ -142,33 +148,66 @@ class LazyKoala {
         }
 
         // 非流文件类型
-        const { data: res } = response
+        const { data } = response
 
         // 非json格式
         if (!contentType.startsWith('application/json')) {
-          return res
+          return data
         }
 
         // JSON格式
-        const status = this.options.responseConfig.status
-        const codeKeys = this.options.responseConfig.codeKeys
-        const msgKeys = this.options.responseConfig.msgKeys
+        const status = that.options.responseConfig.status
+        const codeKeys = that.options.responseConfig.codeKeys
+        const msgKeys = that.options.responseConfig.msgKeys
 
-        const [code] = codeKeys.filter(item => res[item] !== undefined)
-        const [msg] = msgKeys.filter(item => res[item] !== undefined)
+        // 针对流文件未正确设置 contentType 的兼容
+        if (data instanceof Blob) {
+          return new Promise((resolve, reject) => {
+            const reader = new FileReader()
+            reader.onload = e => {
+              let res
+              try {
+                res = JSON.parse(e.target.result)
+              } catch {
+                res = data
+              }
 
-        if (status.includes(res[code])) {
-          return res
+              const [code] = codeKeys.filter(item => res[item] !== undefined)
+              const [msg] = msgKeys.filter(item => res[item] !== undefined)
+
+              if (status.includes(res[code])) {
+                return resolve(res)
+              } else {
+                if (config_?.failMsg) {
+                  that.options.errToast(res[msg])
+                }
+
+                if (config_?.failFn && that.options.ajaxFail) {
+                  that.options.ajaxFail(response)
+                }
+
+                return reject(res)
+              }
+            }
+            reader.readAsText(data)
+          })
         } else {
-          if (config_?.failMsg) {
-            that.options.errToast(res[msg])
-          }
+          const [code] = codeKeys.filter(item => data[item] !== undefined)
+          const [msg] = msgKeys.filter(item => data[item] !== undefined)
 
-          if (config_?.failFn && this.options.ajaxFail) {
-            this.options.ajaxFail(response)
-          }
+          if (status.includes(data[code])) {
+            return data
+          } else {
+            if (config_?.failMsg) {
+              that.options.errToast(data[msg])
+            }
 
-          return Promise.reject(res)
+            if (config_?.failFn && that.options.ajaxFail) {
+              that.options.ajaxFail(response)
+            }
+
+            return Promise.reject(data)
+          }
         }
       },
       error => {
@@ -190,8 +229,8 @@ class LazyKoala {
             that.options.errToast('请稍后尝试～')
           }
 
-          if (config_?.errFn && this.options.ajaxError) {
-            this.options.ajaxError(error)
+          if (config_?.errFn && that.options.ajaxError) {
+            that.options.ajaxError(error)
           }
 
           throw new Error(error)
@@ -200,18 +239,18 @@ class LazyKoala {
     )
   }
 
-  request(url, params, config, type) {
+  request(url, params, config, method, type) {
     const ajaxDefaultConfig = JSON.parse(JSON.stringify(this.options.config))
-    const config_ = Object.assign(ajaxDefaultConfig, config)
+    const config_ = Object.assign({}, ajaxDefaultConfig, config)
+    config_.query = Object.assign({}, ajaxDefaultConfig.query || {}, config_.query || {})
     config_.id = config_.id || url
-
     const urlParams = new URLSearchParams(url.split('?')[1] || '')
 
     Object.keys(config_.query || {}).forEach(key => {
       urlParams.append(key, config_.query[key])
     })
 
-    if (type.toUpperCase() === 'GET') {
+    if (method.toUpperCase() === 'GET') {
       Object.keys(params || {}).forEach(key => {
         urlParams.append(key, params[key])
       })
@@ -224,13 +263,35 @@ class LazyKoala {
       url_ = url_ + '?' + query_
     }
 
-    if (type.toUpperCase() === 'GET') {
+    if (type === 'upload') {
+      return this.axios.request({
+        url: url_,
+        headers: {
+          'Content-Type': 'multipart/form-data'
+        },
+        method,
+        data: params,
+        config_
+      })
+    }
+
+    if (type === 'download') {
+      return this.axios.request({
+        url: url_,
+        method,
+        responseType: 'blob',
+        data: params,
+        config_
+      })
+    }
+
+    if (method.toUpperCase() === 'GET') {
       return this.axios.get(url_, {
         config_
       })
     }
 
-    if (type.toUpperCase() === 'POST') {
+    if (method.toUpperCase() === 'POST') {
       return this.axios.post(url_, params, {
         config_
       })
@@ -241,30 +302,45 @@ class LazyKoala {
 /**
  * 对外暴露接口
  */
-function Get(url, params, config) {
+
+function checkLazyKoalaInstance() {
   if (!lazyKoalaInstance) {
     throw new Error('LazyKoala has not been initialized')
   }
+}
 
+function Get(url, params, config) {
+  checkLazyKoalaInstance()
   return lazyKoalaInstance.request(url, params, config, 'GET')
 }
 
 function Post(url, params, config) {
-  if (!lazyKoalaInstance) {
-    throw new Error('LazyKoala has not been initialized')
-  }
-
+  checkLazyKoalaInstance()
   return lazyKoalaInstance.request(url, params, config, 'POST')
 }
 
+function uploadRequest(url, params, config, method = 'POST') {
+  checkLazyKoalaInstance()
+  return lazyKoalaInstance.request(url, params, config, method, 'upload')
+}
+
+function downloadRequest(url, params, config, method = 'POST') {
+  checkLazyKoalaInstance()
+  return lazyKoalaInstance.request(url, params, config, method, 'download')
+}
+
 function lazyAxios() {
-  if (!lazyKoalaInstance) {
-    throw new Error('LazyKoala has not been initialized')
-  }
+  checkLazyKoalaInstance()
   return lazyKoalaInstance.axios
 }
 
-export { Get, Post, lazyAxios }
+export {
+  Get,
+  Post,
+  uploadRequest,
+  downloadRequest,
+  lazyAxios
+}
 
 export default {
   init: function(options) {

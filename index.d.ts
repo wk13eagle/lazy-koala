@@ -44,6 +44,8 @@ export type AjaxConfig = GlobalAjaxConfig & {
   id?: string
 }
 
+export type AjaxResponseAsAxios = Promise<AxiosResponse>
+
 /**
  * Lazy Get 请求
  * @param url - 请求地址
@@ -63,7 +65,7 @@ export declare function Get(
   url: string,
   params?: Record<string, unknown>,
   config?: AjaxConfig
-): Promise<AxiosResponse>
+): AjaxResponseAsAxios
 
 /**
  * Lazy Post 请求
@@ -84,7 +86,53 @@ export declare function Post(
   url: string,
   params?: Record<string, unknown>,
   config?: AjaxConfig
-): Promise<AxiosResponse>
+): AjaxResponseAsAxios
+
+/**
+ * Lazy Upload 请求
+ * @param url - 请求地址
+ * @param params - 请求参数
+ * @param config - 可选, 请求配置
+ * @param config.id - 请求id
+ * @param config.loading - 是否启动loading
+ * @param config.failMsg - 接口不为成功编码时是否弹出失败提示
+ * @param config.failFn - 全局失败逻辑是否启动
+ * @param config.errMsg - 接口发生错误时是否弹出错误提示
+ * @param config.errFn - 全局错误处理是否启动
+ * @param config.query - url 请求参数
+ * @param config.headers - 请求头信息
+ * @param method - 可选, 请求类型, 默认POST
+ * @returns Promise<AxiosResponse>
+ */
+export declare function uploadRequest(
+  url: string,
+  params: FormData,
+  config?: AjaxConfig,
+  methos?: 'GET' | 'POST'
+): AjaxResponseAsAxios
+
+/**
+ * Lazy Download 请求
+ * @param url - 请求地址
+ * @param params - 请求参数
+ * @param config - 可选, 请求配置
+ * @param config.id - 请求id
+ * @param config.loading - 是否启动loading
+ * @param config.failMsg - 接口不为成功编码时是否弹出失败提示
+ * @param config.failFn - 全局失败逻辑是否启动
+ * @param config.errMsg - 接口发生错误时是否弹出错误提示
+ * @param config.errFn - 全局错误处理是否启动
+ * @param config.query - url 请求参数
+ * @param config.headers - 请求头信息
+ * @param method - 可选, 请求类型, 默认POST
+ * @returns Promise<AxiosResponse>
+ */
+export declare function downloadRequest(
+  url: string,
+  params?: Record<string, unknown>,
+  config?: AjaxConfig,
+  methos?: 'GET' | 'POST'
+): AjaxResponseAsAxios
 
 /**
  * Lazy Axios
