@@ -334,16 +334,15 @@ function lazyAxios() {
   return lazyKoalaInstance.axios
 }
 
+function createLazyKoala(options) {
+  new LazyKoala(options)
+}
+
 export {
   Get,
   Post,
   uploadRequest,
   downloadRequest,
-  lazyAxios
-}
-
-export default {
-  init: function(options) {
-    new LazyKoala(options)
-  }
+  lazyAxios,
+  createLazyKoala
 }

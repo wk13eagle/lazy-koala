@@ -2,7 +2,7 @@
 
 ### 1. 使用方式
 
-LazyKoala.init(options)
+createLazyKoala(options)
 
 options为LazyKoala初始化配置，默认options：
 
@@ -69,8 +69,8 @@ options = {
 // pnpm add axios lazy-koala
 
 // main.js/ts
-import LazyKoala from 'lazy-koala'
-LazyKoala.init()
+import { createLazyKoala } from 'lazy-koala'
+createLazyKoala()
 ```
 
 * 使用javascript

@@ -223,6 +223,6 @@ interface InitOptions {
  * @param ajaxFail - 请求配置
  * @param ajaxError - 请求配置
  */
-export declare function init(
+export declare function createLazyKoala(
   options?: InitOptions
 ): void
