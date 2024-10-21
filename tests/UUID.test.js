@@ -1,4 +1,4 @@
-import { UUID } from '../src/UUID'
+import { UUID } from '../src/uuid'
 
 test('UUID', () => {
   const uuid = UUID()

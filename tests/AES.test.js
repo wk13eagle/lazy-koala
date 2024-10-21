@@ -1,4 +1,4 @@
-import { AES, DAES } from '../src/AES'
+import { AES, DAES } from '../src/aes'
 
 // 12345678901 加密后：MQxTXNAfcyQYWUWZsJmBsg==
 test('AES 加密', () => {
