@@ -1,6 +1,6 @@
 import axios from 'axios'
 import { Loading } from './src/loading'
-import { showToast, showLoadingToast } from './src/toast'
+import { showToast, showLoadingToast } from './src/toast1'
 
 let loadingId = null
 let lazyKoalaInstance = null
