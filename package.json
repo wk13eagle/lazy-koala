@@ -1,6 +1,6 @@
 {
   "name": "lazy-koala",
-  "version": "1.2.2",
+  "version": "1.2.3",
   "description": "lazy koala",
   "main": "index.js",
   "type": "module",

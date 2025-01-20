@@ -246,3 +246,58 @@ declare function showToast(
  * Lazy Loading
  */
 declare function showLoadingToast(): { close(): void }
+
+
+/**
+ * Lazy Storage - setStorageType 设置类型
+ * @param type - Storage 类型 'session' | 'local'
+ */
+declare function setStorageType(
+  type: 'session' | 'local'
+): void
+
+
+/**
+ * Lazy Storage - setStorage 保存
+ * @param name - 键名
+ * @param value - 值
+ */
+declare function setStorage(
+  name: string,
+  value: any
+): void
+
+
+/**
+ * Lazy Storage - getStorage 获取
+ * @param name - 键名
+ */
+declare function getStorage(
+  name: string
+): any
+
+
+/**
+ * Lazy Storage - removeStorage 删除
+ * @param name - 键名
+ */
+declare function removeStorage(
+  name: string
+): void
+
+
+/**
+ * Lazy Storage - clearStorage 清空
+ * @param name - 键名
+ */
+declare function clearStorage(): void
+
+
+/**
+ * Lazy Throttle 节流
+ * @param func - 函数名
+ * @param delay - 可选 - 间隔时间, 单位毫秒, 默认1000
+ */
+declare function createThrottle<T extends (...args: any[]) => any>(func: T, delay?: number): (
+ ...args: Parameters<T>
+) => void;

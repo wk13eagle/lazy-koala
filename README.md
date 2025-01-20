@@ -195,7 +195,9 @@ import {
   SearchParams, HashParams, UrlParams,
   izMobile, izSMS,
   CountDown,
-  showToast, showLoadingToast // 使用vant组件
+  showToast, showLoadingToast, // 使用vant组件
+  setStorageType, setStorage, getStorage, removeStorage, clearStorage,
+  createThrottle
 } from 'lazy-koala/leaf'
 ```
 
@@ -357,4 +359,30 @@ const loadintId = showLoadingToast()
 setTimeout(() => {
   loadintId.close()
 }, 2000)
+```
+
+
+* ##### Storage（缓存）
+```javascript
+setStorageType('local') // 使用localStorage
+
+setStorage('a', 123) // 存储a, 值为数字123
+getStorage('a') // 读取a
+removeStorage('a') // 删除a
+clearStorage() // 清空lazy Storage 创建的数据
+```
+
+
+* ##### Throttle（节流）
+```javascript
+const log = v => {
+  console.log(v)
+}
+
+const logThrottle = createThrottle(log, 10 * 1000)
+
+setInterval(() => {
+  logThrottle('10秒输出一次')
+}, 1000)
+
 ```

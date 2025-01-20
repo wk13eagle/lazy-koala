@@ -11,6 +11,8 @@ import { SearchParams, HashParams, UrlParams } from './src/url-params'
 import { izMobile, izSMS } from './src/verify'
 import { CountDown } from './src/countdown'
 import { showToast, showLoadingToast } from './src/toast'
+import { setStorageType, setStorage, getStorage, removeStorage, clearStorage } from './src/storage'
+import { createThrottle } from './src/throttle'
 
 export {
   AES, DAES,
@@ -24,5 +26,7 @@ export {
   SearchParams, HashParams, UrlParams,
   izMobile, izSMS,
   CountDown,
-  showToast, showLoadingToast
+  showToast, showLoadingToast,
+  setStorageType, setStorage, getStorage, removeStorage, clearStorage,
+  createThrottle
 }
