@@ -197,7 +197,8 @@ import {
   CountDown,
   showToast, showLoadingToast, // 使用vant组件
   setStorageType, setStorage, getStorage, removeStorage, clearStorage,
-  createThrottle
+  createThrottle,
+  InputFile
 } from 'lazy-koala/leaf'
 ```
 
@@ -384,5 +385,26 @@ const logThrottle = createThrottle(log, 10 * 1000)
 setInterval(() => {
   logThrottle('10秒输出一次')
 }, 1000)
+```
 
+
+* ##### InputFile（上传文件）
+```javascript
+// 取消操作会走reject逻辑
+InputFile().then(file => {
+  // 默认上传单张图片
+  console.log('file': file)
+}).catch(err => {
+  console.log('err': err)
+})
+
+InputFile({
+  accept: 'image/jpeg',
+  multiple: true,
+}).then(files => {
+  // 开启多文件上传返回数组
+  console.log('files': files)
+}).catch(err => {
+  console.log('err': err)
+})
 ```

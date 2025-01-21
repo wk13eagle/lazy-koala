@@ -300,4 +300,26 @@ declare function clearStorage(): void
  */
 declare function createThrottle<T extends (...args: any[]) => any>(func: T, delay?: number): (
  ...args: Parameters<T>
-) => void;
+) => void
+
+
+/**
+ * Lazy InputFile 上传文件
+ */
+interface InputFileOptions {
+  /**
+   * accept - 文件类型, 仅图片: 'image/*'; 仅视频: 'video/*'; 图片和视频: 'image/*,video/*'
+   */
+  accept?: string
+  /**
+   * multiple - 允许多文件上传, 默认false
+   */
+  multiple?: boolean
+  /**
+   * capture - 使用摄像头, 默认null, user: 前置摄像头, environment: 后置摄像头
+   */
+  capture?: 'user' | 'environment' | null
+}
+declare function InputFile(
+  options?: InputFileOptions
+): Promise<File | FileList | string>

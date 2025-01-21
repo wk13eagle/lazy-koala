@@ -13,6 +13,7 @@ import { CountDown } from './src/countdown'
 import { showToast, showLoadingToast } from './src/toast'
 import { setStorageType, setStorage, getStorage, removeStorage, clearStorage } from './src/storage'
 import { createThrottle } from './src/throttle'
+import { InputFile } from './src/input-file'
 
 export {
   AES, DAES,
@@ -28,5 +29,6 @@ export {
   CountDown,
   showToast, showLoadingToast,
   setStorageType, setStorage, getStorage, removeStorage, clearStorage,
-  createThrottle
+  createThrottle,
+  InputFile
 }
